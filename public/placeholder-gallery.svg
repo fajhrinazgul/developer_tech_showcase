@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F3F4F6" />
+      <stop offset="100%" stop-color="#E5E7EB" />
+    </linearGradient>
+    <linearGradient id="icon-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9CA3AF" />
+      <stop offset="100%" stop-color="#6B7280" />
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="600" rx="24" fill="url(#bg-gradient)" />
+
+  <g transform="translate(340, 220)" stroke="url(#icon-gradient)" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    {/* Ikon Gambar/Galeri */}
+    <rect x="0" y="10" width="120" height="90" rx="12" stroke-width="5" />
+    <circle cx="35" cy="40" r="12" fill="url(#icon-gradient)" opacity="0.2" />
+    <path d="M5 90 L45 45 opacity=0.8" stroke-width="5" />
+    <path d="M35 90 L95 30 L115 50" stroke-width="5" />
+  </g>
+
+  <text x="400" y="370" fill="#9CA3AF" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600" letter-spacing="1" text-anchor="middle">
+    IMAGE NOT AVAILABLE
+  </text>
+  <text x="400" y="395" fill="#9CA3AF" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="400" text-anchor="middle">
+    Secure Sandbox Storage
+  </text>
+</svg>
