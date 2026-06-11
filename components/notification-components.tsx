@@ -2,27 +2,30 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { NotificationType } from '@/lib/types/notification'
-import Cookies from 'js-cookie'
+import { UserType } from '@/lib/types/user'
 import { Bell, ExternalLink, Inbox } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { AppSidebar } from './app-sidebar'
 import { SidebarProvider, SidebarTrigger } from './ui/sidebar'
 
-export default function NotificationComponent() {
+interface Props {
+  user: UserType | null
+  token?: string
+}
+
+export default function NotificationComponent({ user, token }: Props) {
   const [notifications, setNotifications] = useState<NotificationType[]>([])
   const [loading, setLoading] = useState(true)
 
   const router = useRouter()
 
-  const token = Cookies.get('access_token')
   useEffect(() => {
     // Ganti dengan URL API Anda
-    fetch('http://127.0.0.1:8000/api/notifications/', {
+    fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/notifications/`, {
       headers: {
         Authorization: 'Bearer ' + token,
       },
-      credentials: 'include',
     })
       .then((res) => res.json())
       .then((data) => {
@@ -39,7 +42,6 @@ export default function NotificationComponent() {
       {
         method: 'POST',
         headers: { Authorization: 'Bearer ' + token },
-        credentials: 'include',
       }
     )
     router.refresh()
@@ -48,7 +50,7 @@ export default function NotificationComponent() {
 
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar user={user} />
       <main className="flex-1 bg-zinc-950 min-h-screen p-8">
         <SidebarTrigger className="mb-6 text-zinc-400" />
         <div className="p-8 max-w-4xl mx-auto font-mono text-zinc-100">

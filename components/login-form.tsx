@@ -48,16 +48,21 @@ export function LoginForm() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
-          credentials: 'include',
         }
       )
 
       const result = await response.json()
 
       if (response.ok) {
-        Cookies.set('access_token', result.access)
+        Cookies.set('access_token', result.access, {
+          path: '/',
+          expires: 3600 * 24 * 7,
+          // sameSite: '',
+          secure: false,
+          domain: `${process.env.NEXT_PUBLIC_SERVER_DOMAIN}`,
+        })
         toast.success('System: Authentication Successful')
-        window.location.href = '/dashboard' // Redirect ke dashboard
+        window.location.href = '/' // Redirect ke dashboard
       } else {
         toast.error('System: Invalid credentials')
       }
@@ -81,14 +86,19 @@ export function LoginForm() {
             body: JSON.stringify({
               access_token: tokenResponse.access_token, // Ini token dari Google
             }),
-            credentials: 'include',
           }
         )
 
         const data = await res.json()
         if (res.ok) {
-          Cookies.set('access_token', data.access) // Simpan JWT Anda
-          window.location.href = '/dashboard'
+          Cookies.set('access_token', data.access, {
+            path: '/',
+            expires: 3600 * 24 * 7,
+            // sameSite: 'Lax',
+            secure: false,
+            domain: `${process.env.NEXT_PUBLIC_SERVER_DOMAIN}`,
+          }) // Simpan JWT Anda
+          window.location.href = '/'
         } else {
           toast.error('Gagal login dengan Google')
         }

@@ -1,20 +1,23 @@
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { stripMarkdownAndTruncate } from '@/lib/utils'
 import { Eye, Heart, MessageSquare, User } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 export function ProjectCard({ project }: { project: any }) {
+  const cleanDescription = stripMarkdownAndTruncate(project.description, 40)
   return (
     <Link href={`/projects/${project.id}`}>
-      <Card className="p-0 bg-zinc-900 border-zinc-800 overflow-hidden hover:border-emerald-900 transition-all group flex flex-col">
+      <Card className="p-0 bg-zinc-900 min-h-full border-zinc-800 overflow-hidden hover:border-emerald-900 transition-all group flex flex-col">
         {/* Thumbnail */}
-        <div className="relative h-40 w-full bg-zinc-950 overflow-hidden">
+        <div className="relative h-60 w-full bg-zinc-950 overflow-hidden">
           <Image
             src={project.thumbnail}
             alt={project.title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            width={1920}
+            height={1080}
+            className="group-hover:scale-105 transition-transform duration-500"
           />
         </div>
 
@@ -29,7 +32,7 @@ export function ProjectCard({ project }: { project: any }) {
 
         <CardContent className="p-4 pt-0 grow">
           <p className="text-xs text-zinc-400 font-mono line-clamp-2 mb-4">
-            {project.description}
+            {cleanDescription}
           </p>
           <div className="flex gap-2 flex-wrap">
             {project.tech_stack?.map((tech: any) => (

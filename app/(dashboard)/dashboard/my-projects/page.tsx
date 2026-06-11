@@ -15,7 +15,7 @@ export const generateMetadata = async (
   _parent: ResolvingMetadata
 ): Promise<Metadata> => {
   const cookieStore = await cookies()
-  const token = cookieStore.get('token')?.value || ''
+  const token = cookieStore.get('access_token')?.value || ''
   const thisUser = await authMe(token)
 
   // Berikan judul fallback jika user tidak login
@@ -41,7 +41,13 @@ const MyProjectPage = async ({ params, searchParams }: Props) => {
   const projects = await getProjectsUser(token, thisUser.username)
 
   // Setelah baris di atas, TypeScript tahu bahwa thisUser pasti bukan null
-  return <MyProjectsComponent projects={projects?.results} />
+  return (
+    <MyProjectsComponent
+      projects={projects?.results}
+      user={thisUser}
+      token={token}
+    />
+  )
 }
 
 export default MyProjectPage

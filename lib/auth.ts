@@ -10,7 +10,6 @@ export const authMe = async (token: string): Promise<UserType | null> => {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token,
         },
-        credentials: 'include',
       }
     )
     if (!response.ok) {
@@ -26,11 +25,23 @@ export const authMe = async (token: string): Promise<UserType | null> => {
 }
 
 export const getUserByUsername = async (
-  username: string
+  username: string,
+  token: string | undefined
 ): Promise<UserType | null> => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/${username}/`
-  )
-  if (!res.ok) return null
-  return await res.json()
+  if (token) {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/${username}/`,
+      {
+        headers: { Authorization: 'Bearer ' + token },
+      }
+    )
+    if (!res.ok) return null
+    return await res.json()
+  } else {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/${username}/`
+    )
+    if (!res.ok) return null
+    return await res.json()
+  }
 }

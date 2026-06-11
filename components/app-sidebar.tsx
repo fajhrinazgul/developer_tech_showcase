@@ -9,34 +9,26 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
+import { UserType } from '@/lib/types/user'
 import Cookies from 'js-cookie'
 import {
   FolderKanban,
   LayoutDashboard,
   LogOut,
   MessageCircle,
+  Settings2Icon,
   Terminal,
   UserCircle,
 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-export function AppSidebar() {
-  const [user, setUser] = useState<any>(null)
+
+interface Props {
+  user: UserType | null
+}
+
+export function AppSidebar({ user }: Props) {
   const router = useRouter()
-
-  // Ambil data user saat pertama kali load
-  useEffect(() => {
-    const token = Cookies.get('access_token')
-
-    fetch('http://127.0.0.1:8000/api/auth/me/', {
-      credentials: 'include',
-      headers: { Authorization: 'Bearer ' + token },
-    })
-      .then((res) => res.json())
-      .then((data) => setUser(data))
-      .catch(() => setUser(null))
-  }, [])
 
   const handleLogout = () => {
     Cookies.remove('access_token')
@@ -47,10 +39,13 @@ export function AppSidebar() {
   return (
     <Sidebar className="border-r border-zinc-800 bg-zinc-950">
       <SidebarContent>
-        <div className="flex items-center gap-2 px-6 py-6 text-emerald-400 font-mono">
+        <Link
+          href="/"
+          className="flex items-center gap-2 px-6 py-6 text-emerald-400 font-mono"
+        >
           <Terminal size={20} />
           <span className="font-bold">DEV_DASHBOARD</span>
-        </div>
+        </Link>
 
         <SidebarGroup>
           <SidebarGroupLabel className="text-zinc-500 font-mono">
@@ -85,6 +80,16 @@ export function AppSidebar() {
               >
                 <Link href="/dashboard/notifications">
                   <MessageCircle size={16} /> Notifications
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                className="text-zinc-300 hover:bg-zinc-900"
+                asChild
+              >
+                <Link href="/dashboard/settings">
+                  <Settings2Icon size={16} /> Settings
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

@@ -1,23 +1,28 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { UserType } from '@/lib/types/user'
 import { IconDashboard } from '@tabler/icons-react'
 import Cookies from 'js-cookie'
-import { LogIn, LogOut, Menu, Terminal, TerminalIcon, X } from 'lucide-react'
+import {
+  LogIn,
+  LogOut,
+  Menu,
+  Terminal,
+  TerminalIcon,
+  User,
+  X,
+} from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
-export function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+interface navbarProps {
+  user: UserType | null
+}
+export function Navbar({ user }: navbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const router = useRouter()
-
-  // Cek status login saat komponen di-mount
-  useEffect(() => {
-    const token = Cookies.get('access_token')
-    setIsLoggedIn(!!token)
-  }, [])
 
   const handleLogout = () => {
     Cookies.remove('access_token')
@@ -54,13 +59,19 @@ export function Navbar() {
 
         {/* Auth Button (Desktop) */}
         <div className="hidden md:flex gap-4">
-          {isLoggedIn ? (
+          {user ? (
             <>
               <Link
                 href="/dashboard"
                 className="flex gap-1 items-center text-zinc-400 hover:text-red-400 font-mono"
               >
                 <IconDashboard size={16} className="mr-2" /> Dashboard
+              </Link>
+              <Link
+                href={`/profile/${user.username}`}
+                className="flex gap-1 items-center text-zinc-400 hover:text-red-400 font-mono"
+              >
+                <User size={16} className="mr-2" /> Profile
               </Link>
               <Button
                 variant="ghost"
@@ -101,19 +112,26 @@ export function Navbar() {
           <Link href="/about" className="block text-zinc-400 font-mono">
             ~/about
           </Link>
-          {isLoggedIn ? (
+          {user ? (
             <>
               <Button
-                onClick={handleLogout}
+                className="w-full justify-start text-red-400"
+                variant="ghost"
+              >
+                <Link href="/dashboard" className="flex items-center gap-2">
+                  <TerminalIcon size={16} className="mr-2" /> Dashboard
+                </Link>
+              </Button>
+
+              <Button
                 className="w-full justify-start text-red-400"
                 variant="ghost"
               >
                 <Link
-                  href="/dashboard"
-                  onClick={handleLogout}
+                  href={`/profile/${user.username}`}
                   className="flex items-center gap-2"
                 >
-                  <TerminalIcon size={16} className="mr-2" /> Dashboard
+                  <User size={16} className="mr-2" /> Profile
                 </Link>
               </Button>
 

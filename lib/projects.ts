@@ -12,7 +12,6 @@ export const getProject = async (
         headers: {
           Authorization: 'Bearer ' + token,
         },
-        credentials: 'include',
       }
     )
     if (!res.ok) return null
@@ -35,14 +34,12 @@ export async function getProjectData(id: string, token: string | undefined) {
       fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/projects/${id}/`, {
         cache: 'no-store',
         headers: { Authorization: `Bearer ${token}` },
-        credentials: 'include',
       }),
       fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/projects/${id}/comments/`,
         {
           cache: 'no-store',
           headers: { Authorization: 'Bearer ' + token },
-          credentials: 'include',
         }
       ),
     ])
@@ -74,7 +71,7 @@ export async function getProjectData(id: string, token: string | undefined) {
 }
 
 export const getProjectsUser = async (
-  token: string,
+  token: string | null | undefined,
   author: string
 ): Promise<{
   count: number
@@ -83,21 +80,38 @@ export const getProjectsUser = async (
   results: ProjectType[]
 } | null> => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/projects/?author=${author}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        credentials: 'include',
-        cache: 'no-store',
-      }
-    )
+    if (token) {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/projects/?author=${author}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
 
-    const data = await response.json()
-    return data
+          cache: 'no-store',
+        }
+      )
+
+      const data = await response.json()
+      return data
+    } else {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/projects/?author=${author}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+
+          cache: 'no-store',
+        }
+      )
+
+      const data = await response.json()
+      return data
+    }
   } catch (error) {
     console.error(error)
     return null

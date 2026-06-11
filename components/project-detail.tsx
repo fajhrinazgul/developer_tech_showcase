@@ -28,8 +28,6 @@ import { motion } from 'framer-motion'
 import { CodeBlock } from './markdown-render'
 import { Separator } from './ui/separator'
 
-import Cookies from 'js-cookie'
-
 // Komponen Container
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -51,9 +49,15 @@ interface Props {
   project: any
   initialComments: any
   thisUser?: any
+  token?: string
 }
 
-export function ProjectDetail({ project, initialComments, thisUser }: Props) {
+export function ProjectDetail({
+  project,
+  initialComments,
+  thisUser,
+  token,
+}: Props) {
   const router = useRouter()
 
   // State untuk interaksi
@@ -73,8 +77,6 @@ export function ProjectDetail({ project, initialComments, thisUser }: Props) {
 
   // Fungsi Helper untuk request API
   const handleAction = async (endpoint: string, body?: any) => {
-    const token = Cookies.get('access_token')
-
     if (!token) {
       toast.error('System: Please login to perform this action.')
       router.push('/login')
@@ -91,7 +93,6 @@ export function ProjectDetail({ project, initialComments, thisUser }: Props) {
             Authorization: `Bearer ${token}`,
           },
           body: body ? JSON.stringify(body) : null,
-          credentials: 'include',
         }
       )
 
@@ -155,8 +156,6 @@ export function ProjectDetail({ project, initialComments, thisUser }: Props) {
   }
 
   const updateComment = async (commentId: string) => {
-    const token = Cookies.get('access_token')
-
     if (!token) {
       toast.error("System: Please login to perform this action.'")
       return
@@ -172,7 +171,6 @@ export function ProjectDetail({ project, initialComments, thisUser }: Props) {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ content: editContent }),
-          credentials: 'include',
         }
       )
 
@@ -192,8 +190,6 @@ export function ProjectDetail({ project, initialComments, thisUser }: Props) {
   }
 
   const deleteComment = async (commentId: string) => {
-    const token = Cookies.get('access_token')
-
     if (!confirm('Are you sure you want to delete this comment?')) return
 
     try {
@@ -204,7 +200,6 @@ export function ProjectDetail({ project, initialComments, thisUser }: Props) {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          credentials: 'include',
         }
       )
 
@@ -410,9 +405,12 @@ export function ProjectDetail({ project, initialComments, thisUser }: Props) {
                 <p className="text-[10px] text-zinc-500 font-mono uppercase">
                   Author
                 </p>
-                <p className="text-sm font-mono text-zinc-200">
+                <Link
+                  href={`/profile/${project.author.username}`}
+                  className="text-sm font-mono text-zinc-200 hover:text-green-400 hover:underline"
+                >
                   @{project.author.username}
-                </p>
+                </Link>
               </div>
             </div>
 

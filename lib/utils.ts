@@ -37,3 +37,31 @@ export function dateFormat(dateString: string): string {
 
   return ''
 }
+
+export function stripMarkdownAndTruncate(
+  markdown: string,
+  maxWords: number = 40
+): string {
+  if (!markdown) return ''
+
+  const plainText = markdown
+    .replace(/!\[.*?\]\(.*?\)/g, '') // Hapus Gambar: ![alt](url)
+    .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Hapus Link tapi ambil teksnya: [Teks](url) -> Teks
+    .replace(/#{1,6}\s+/g, '') // Hapus Headers: #, ##, etc.
+    .replace(/(\*\*|__)(.*?)\1/g, '$2') // Hapus Bold: **teks** -> teks
+    .replace(/(\*|_)(.*?)\1/g, '$2') // Hapus Italic: *teks* -> teks
+    .replace(/``[\s\S]*?``/g, '') // Hapus Code Blocks
+    .replace(/`([^`]+)`/g, '$1') // Hapus Inline Code: `code` -> code
+    .replace(/(>|\-|\*)\s+/g, '') // Hapus Blockquotes & Bullet List dashes
+    .replace(/\n+/g, ' ') // Ubah baris baru menjadi spasi tunggal
+
+  // Pecah menjadi array kata
+  const words = plainText.trim().split(/\s+/)
+
+  // Jika jumlah kata melebihi batas, potong dan beri postfix '...'
+  if (words.length > maxWords) {
+    return words.slice(0, maxWords).join(' ') + '...'
+  }
+
+  return plainText
+}

@@ -14,4 +14,5 @@ export type UserType = {
   projects_count: number
   total_comments_received: number
   date_joined: string
+  is_following: boolean
 }

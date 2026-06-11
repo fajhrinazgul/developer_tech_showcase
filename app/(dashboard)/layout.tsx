@@ -1,9 +1,11 @@
 import { MotionExit } from '@/components/motion-exit'
 import { NotificationProvider } from '@/components/notification-provider'
 import { ScrollToTop } from '@/components/scroll-to-top'
+import { authMe } from '@/lib/auth'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { cookies } from 'next/headers'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -73,12 +75,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const cookieStore = await cookies()
+  const token = cookieStore.get('access_token')?.value
+  const user = await authMe(token || '')
   return (
     <html lang="en" className="dark">
       {/* Menggunakan font mono untuk kesan terminal total */}
       <body className={`${inter.className} font-mono antialiased min-h-screen`}>
         {/* Container Utama */}
-        <NotificationProvider>
+        <NotificationProvider token={token} user={user}>
           <GoogleOAuthProvider clientId={`${process.env.GOOGLE_CLIENT_ID}`}>
             <main className="relative flex min-h-screen flex-col">
               {/* Efek gradient tipis di bagian atas agar terlihat seperti 'glow' monitor */}

@@ -26,6 +26,10 @@ export const generateMetadata = async (
   }
 }
 
-export default function NotificationPage() {
-  return <NotificationComponent />
+export default async function NotificationPage() {
+  const cookieStore = await cookies()
+  const token = cookieStore.get('access_token')?.value || ''
+  const user = await authMe(token)
+
+  return <NotificationComponent user={user} token={token} />
 }

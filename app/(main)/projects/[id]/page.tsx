@@ -72,6 +72,7 @@ export default async function ProjectDetailPage({ params }: Props) {
       project={project}
       initialComments={comments}
       thisUser={thisUser}
+      token={token}
     />
   )
 }

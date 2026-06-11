@@ -58,9 +58,7 @@ export function RegisterForm() {
         try {
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/api/register/check-availability/?field=username&value=${username}`,
-            {
-              credentials: 'include',
-            }
+            {}
           )
           const data = await res.json()
           setAvailability((prev) => ({ ...prev, username: data.available }))
@@ -83,7 +81,7 @@ export function RegisterForm() {
         try {
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/api/register/check-availability/?field=email&value=${email}`,
-            { credentials: 'include' }
+            {}
           )
           const data = await res.json()
           setAvailability((prev) => ({ ...prev, email: data.available }))
@@ -113,7 +111,6 @@ export function RegisterForm() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
-          credentials: 'include',
         }
       )
 
